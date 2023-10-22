@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/nav_quran">
+
+    <fragment
+        android:id="@+id/nav_quran"
+        android:name="com.yus.quran.presentation.QuranFragment"
+        android:label="fragment_quran"
+        tools:layout="@layout/fragment_quran" />
+    <fragment
+        android:id="@+id/nav_adzan"
+        android:name="com.yus.quran.presentation.AdzanFragment"
+        android:label="fragment_adzan"
+        tools:layout="@layout/fragment_adzan" />
+    <fragment
+        android:id="@+id/nav_doa"
+        android:name="com.yus.quran.presentation.DoaFragment"
+        android:label="fragment_doa"
+        tools:layout="@layout/fragment_doa" />
+</navigation>
