@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.yus.quran.adapter.ListSurahAdapter
+import com.yus.quran.adapter.QuranAdapter
 import com.yus.quran.databinding.FragmentQuranBinding
 
 class QuranFragment : Fragment() {
@@ -32,7 +32,7 @@ class QuranFragment : Fragment() {
 
         viewModel.listSurah.observe(viewLifecycleOwner) {
             binding.rvQuran.apply {
-                val mAdapter = ListSurahAdapter()
+                val mAdapter = QuranAdapter()
                 mAdapter.setData(it.listSurah)
                 adapter = mAdapter
                 layoutManager = LinearLayoutManager(context)

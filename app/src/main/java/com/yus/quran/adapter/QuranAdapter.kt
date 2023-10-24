@@ -1,14 +1,16 @@
 package com.yus.quran.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.yus.quran.databinding.ItemSurahBinding
 import com.yus.quran.network.quran.SurahItem
+import com.yus.quran.presentation.quran.DetailSurahActivity
 
-class ListSurahAdapter : RecyclerView.Adapter<ListSurahAdapter.SurahViewHolder>() {
+class QuranAdapter : RecyclerView.Adapter<QuranAdapter.SurahViewHolder>() {
 
-    val listSurah = ArrayList<SurahItem>()
+    private val listSurah = ArrayList<SurahItem>()
 
     fun setData(list: List<SurahItem>?) {
         if (list == null) return
@@ -33,6 +35,12 @@ class ListSurahAdapter : RecyclerView.Adapter<ListSurahAdapter.SurahViewHolder>(
             tvAyah.text = resultOfAyah
             tvName.text = data.name
             tvNumber.text = data.number.toString()
+
+            this.root.setOnClickListener {
+                val intent = Intent(it.context, DetailSurahActivity::class.java)
+                intent.putExtra(DetailSurahActivity.EXTRA_DATA, data)
+                it.context.startActivity(intent)
+            }
         }
     }
 }

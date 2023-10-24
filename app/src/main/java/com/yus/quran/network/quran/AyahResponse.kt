@@ -50,23 +50,11 @@ data class AyahsItem(
 	@Json(name="number")
 	val number: Int? = null,
 
-	@Json(name="hizbQuarter")
-	val hizbQuarter: Int? = null,
-
-	@Json(name="ruku")
-	val ruku: Int? = null,
-
-	@Json(name="manzil")
-	val manzil: Int? = null,
-
 	@Json(name="text")
 	val text: String? = null,
 
 	@Json(name="page")
 	val page: Int? = null,
-
-	@Json(name="sajda")
-	val sajda: Boolean? = null,
 
 	@Json(name="numberInSurah")
 	val numberInSurah: Int? = null,
