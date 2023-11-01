@@ -4,24 +4,24 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.yus.quran.databinding.ItemAyahBinding
-import com.yus.quran.network.quran.AyahsItem
-import com.yus.quran.network.quran.QuranEdition
+import com.yus.quran.core.domain.model.Ayah
+import com.yus.quran.core.domain.model.QuranEdition
 
 class SurahAdapter : RecyclerView.Adapter<SurahAdapter.MyViewHolder>() {
-    private val listAyah = ArrayList<AyahsItem>()
-    private val listEdition = ArrayList<QuranEdition>()
+    private val listAyah = ArrayList<Ayah>()
+    private val listQuranEditions = ArrayList<QuranEdition>()
     private var onItemClickCallback: OnItemClickCallback? = null
 
     fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
         this.onItemClickCallback = onItemClickCallback
     }
 
-    fun setData(dataAyah: List<AyahsItem>?, dataEdition: List<QuranEdition>?) {
+    fun setData(dataAyah: List<Ayah>?, dataEdition: List<QuranEdition>?) {
         if (dataAyah == null || dataEdition == null) return
         listAyah.clear()
         listAyah.addAll(dataAyah)
-        listEdition.clear()
-        listEdition.addAll(dataEdition)
+        listQuranEditions.clear()
+        listQuranEditions.addAll(dataEdition)
     }
 
     class MyViewHolder(val binding: ItemAyahBinding) : RecyclerView.ViewHolder(binding.root)
@@ -32,15 +32,15 @@ class SurahAdapter : RecyclerView.Adapter<SurahAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val listAyah = listAyah[position]
-        val quranAudio = listEdition[1].listAyahs?.get(position)
-        val quranTranslationIndo = listEdition[2].listAyahs?.get(position)
+        val quranAudio = listQuranEditions[1].listAyahs[position]
+        val quranTranslationIndo = listQuranEditions[2].listAyahs[position]
 
         holder.binding.apply {
             itemNumberAyah.text = listAyah.numberInSurah.toString()
             itemAyah.text = listAyah.text
-            itemTranslation.text = quranTranslationIndo?.text
+            itemTranslation.text = quranTranslationIndo.text
             this.root.setOnClickListener {
-                quranAudio?.let { data -> onItemClickCallback?.onItemClicked(data) }
+                onItemClickCallback?.onItemClicked(quranAudio)
             }
         }
     }
@@ -48,6 +48,6 @@ class SurahAdapter : RecyclerView.Adapter<SurahAdapter.MyViewHolder>() {
     override fun getItemCount() = listAyah.size
 
     interface OnItemClickCallback {
-        fun onItemClicked(data: AyahsItem)
+        fun onItemClicked(data: Ayah)
     }
 }

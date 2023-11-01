@@ -3,51 +3,84 @@ package com.yus.quran.presentation.quran
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yus.quran.R
 import com.yus.quran.adapter.SurahAdapter
+import com.yus.quran.core.data.Resource
 import com.yus.quran.databinding.ActivityDetailSurahBinding
 import com.yus.quran.databinding.CustomViewAlertdialogBinding
-import com.yus.quran.network.quran.AyahsItem
-import com.yus.quran.network.quran.SurahItem
+import com.yus.quran.core.domain.model.Ayah
+import com.yus.quran.core.domain.model.Surah
+import com.yus.quran.presentation.ViewModelFactory
 
 class DetailSurahActivity : AppCompatActivity() {
     private var _binding: ActivityDetailSurahBinding? = null
     private val binding get() = _binding as ActivityDetailSurahBinding
 
-    private var _surah: SurahItem? = null
-    private val surah get() = _surah as SurahItem
+    private var _surah: Surah? = null
+    private val surah get() = _surah as Surah
 
     private var _mediaPlayer: MediaPlayer? = null
     private val mediaPlayer get() = _mediaPlayer as MediaPlayer
+
+    private val quranViewModel: QuranViewModel by viewModels { ViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityDetailSurahBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        _surah = intent.getParcelableExtra(EXTRA_DATA, SurahItem::class.java)
-
-        val quranViewModel = ViewModelProvider(this)[QuranViewModel::class.java]
-        surah.number?.let { quranViewModel.getListAyah(it) }
+        _surah = intent.getParcelableExtra(EXTRA_DATA, Surah::class.java)
 
         initView()
 
         val mAdapter = SurahAdapter()
         mAdapter.setOnItemClickCallback(object : SurahAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: AyahsItem) {
+            override fun onItemClicked(data: Ayah) {
                 showCustomAlertDialog(data, surah)
             }
         })
 
-        quranViewModel.listAyah.observe(this) {
-            binding.rvSurah.apply {
-                mAdapter.setData(it.quranEdition?.get(0)?.listAyahs, it.quranEdition)
-                adapter = mAdapter
-                layoutManager = LinearLayoutManager(this@DetailSurahActivity)
+        val numberSurah = surah.number
+        if (numberSurah != null) {
+            quranViewModel.getDetailSurahWithQuranEdition(numberSurah).observe(this) {
+                when (it) {
+                    is Resource.Loading -> showLoading(true)
+                    is Resource.Success -> {
+                        binding.rvSurah.apply {
+                            mAdapter.setData(it.data?.get(0)?.listAyahs, it.data)
+                            adapter = mAdapter
+                            layoutManager = LinearLayoutManager(this@DetailSurahActivity)
+                        }
+                        showLoading(false)
+                    }
+
+                    is Resource.Error -> {
+                        Toast.makeText(this, "Error ${it.message}", Toast.LENGTH_SHORT).show()
+                        showLoading(false)
+                    }
+                }
+            }
+        } else {
+            Toast.makeText(this, "Number Surah not Found.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.apply {
+            if (isLoading) {
+                progressBar.visibility = View.VISIBLE
+                cvDetailSurah.visibility = View.GONE
+                rvSurah.visibility = View.GONE
+            } else {
+                progressBar.visibility = View.GONE
+                cvDetailSurah.visibility = View.VISIBLE
+                rvSurah.visibility = View.VISIBLE
             }
         }
     }
@@ -64,7 +97,7 @@ class DetailSurahActivity : AppCompatActivity() {
         }
     }
 
-    private fun showCustomAlertDialog(dataAudio: AyahsItem, surah: SurahItem) {
+    private fun showCustomAlertDialog(dataAudio: Ayah, surah: Surah) {
         _mediaPlayer = MediaPlayer()
         val builder = AlertDialog.Builder(this, R.style.CustomAlertDialog).create()
         val view = CustomViewAlertdialogBinding.inflate(layoutInflater)

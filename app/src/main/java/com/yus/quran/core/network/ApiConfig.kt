@@ -1,6 +1,6 @@
-package com.yus.quran.network
+package com.yus.quran.core.network
 
-import com.yus.quran.network.quran.QuranApiService
+import com.yus.quran.core.network.quran.QuranApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
