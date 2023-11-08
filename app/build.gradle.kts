@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId = "com.yus.quran"
         minSdk = 33
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -74,5 +74,4 @@ dependencies {
 
     // FusedLocation
     implementation("com.google.android.gms:play-services-location:21.0.1")
-
 }
