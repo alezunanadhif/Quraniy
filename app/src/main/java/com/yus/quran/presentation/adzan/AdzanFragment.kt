@@ -38,8 +38,8 @@ class AdzanFragment : Fragment() {
             if (it != null) {
                 val geocoder = Geocoder(requireContext(), Locale.getDefault())
                 geocoder.getFromLocation(
-                    it.latitude,
-                    it.longitude,
+                    it[0],
+                    it[1],
                     1
                 ) { listAddress ->
                     val city = listAddress[0].subAdminArea

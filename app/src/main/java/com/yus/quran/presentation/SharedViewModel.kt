@@ -8,22 +8,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.LatLng
 
 class SharedViewModel(context: Context) : ViewModel() {
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
 
-    private val _getLasKnownLocation = MutableLiveData<LatLng>()
-    val getLastKnownLocation: LiveData<LatLng> = _getLasKnownLocation
+    private val _getLasKnownLocation = MutableLiveData<List<Double>>()
+    val getLastKnownLocation: LiveData<List<Double>> = _getLasKnownLocation
 
     @SuppressLint("MissingPermission")
     fun requestLocationUpdates() {
-        // Check for permission and handle it if not granted.
-
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             location?.let {
-                val latLng = LatLng(it.latitude, it.longitude)
+                val latLng = listOf(it.latitude, it.longitude)
                 _getLasKnownLocation.value = latLng
             }
         }

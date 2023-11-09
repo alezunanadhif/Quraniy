@@ -74,8 +74,4 @@ dependencies {
 
     // FusedLocation
     implementation("com.google.android.gms:play-services-location:21.0.1")
-
-    // Maps for using LatLng
-    implementation("com.google.android.gms:play-services-maps:18.2.0")
-
 }
