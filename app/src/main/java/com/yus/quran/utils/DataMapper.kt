@@ -1,17 +1,19 @@
 package com.yus.quran.utils
 
+import com.yus.quran.core.data.network.adzan.CityItem
+import com.yus.quran.core.data.network.quran.AyahsItem
+import com.yus.quran.core.data.network.quran.QuranEditionItem
+import com.yus.quran.core.data.network.quran.SurahItem
 import com.yus.quran.core.domain.model.Ayah
+import com.yus.quran.core.domain.model.City
 import com.yus.quran.core.domain.model.QuranEdition
 import com.yus.quran.core.domain.model.Surah
-import com.yus.quran.core.network.quran.AyahsItem
-import com.yus.quran.core.network.quran.QuranEditionItem
-import com.yus.quran.core.network.quran.SurahItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 object DataMapper {
 
-    @JvmName("mapSurahResponseToDomainFunction")
+    @JvmName("mapSurahResponseToDomain")
     fun mapResponseToDomain(input: List<SurahItem>): Flow<List<Surah>> {
         val listSurah = ArrayList<Surah>()
         input.map {
@@ -28,7 +30,7 @@ object DataMapper {
         return flowOf(listSurah)
     }
 
-    @JvmName("mapQuranEditionResponseToDomainFunction")
+    @JvmName("mapQuranEditionResponseToDomain")
     fun mapResponseToDomain(input: List<QuranEditionItem>): Flow<List<QuranEdition>> {
         val listQuranEdition = ArrayList<QuranEdition>()
         input.map {
@@ -58,5 +60,18 @@ object DataMapper {
             listAyah.add(ayah)
         }
         return listAyah
+    }
+
+    @JvmName("mapCityResponseToDomain")
+    fun mapResponseToDomain(input: List<CityItem>): Flow<List<City>> {
+        val listCity = ArrayList<City>()
+        input.map {
+            val city = City(
+                lokasi = it.lokasi,
+                id = it.id
+            )
+            listCity.add(city)
+        }
+        return flowOf(listCity)
     }
 }

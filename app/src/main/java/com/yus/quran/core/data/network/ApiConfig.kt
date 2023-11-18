@@ -1,6 +1,7 @@
-package com.yus.quran.core.network
+package com.yus.quran.core.data.network
 
-import com.yus.quran.core.network.quran.QuranApiService
+import com.yus.quran.core.data.network.adzan.AdzanApiService
+import com.yus.quran.core.data.network.quran.QuranApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -22,4 +23,5 @@ object ApiConfig {
     }
 
     val getQuranService = createService<QuranApiService>("https://api.alquran.cloud/v1/")
+    val getAdzanTimeService = createService<AdzanApiService>("https://api.myquran.com/v1/")
 }

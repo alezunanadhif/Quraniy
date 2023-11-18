@@ -1,6 +1,5 @@
 package com.yus.quran.presentation.adzan
 
-import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,19 +8,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.yus.quran.core.data.Resource
 import com.yus.quran.databinding.FragmentAdzanBinding
-import com.yus.quran.presentation.SharedViewModel
 import com.yus.quran.presentation.ViewModelFactory
-import java.util.Locale
 
 class AdzanFragment : Fragment() {
     private var _binding: FragmentAdzanBinding? = null
     private val binding get() = _binding as FragmentAdzanBinding
 
-    private val sharedViewModel: SharedViewModel by viewModels { ViewModelFactory(requireContext()) }
-
-    private var _resultOfCity: String? = null
-    private val resultOfCity get() = _resultOfCity as String
+    private val adzanViewModel: AdzanViewModel by viewModels { ViewModelFactory(requireContext()) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,28 +28,46 @@ class AdzanFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedViewModel.requestLocationUpdates()
-        sharedViewModel.getLastKnownLocation.observe(viewLifecycleOwner) {
-            if (it != null) {
-                val geocoder = Geocoder(requireContext(), Locale.getDefault())
-                geocoder.getFromLocation(
-                    it[0],
-                    it[1],
-                    1
-                ) { listAddress ->
-                    val city = listAddress[0].subAdminArea
-                    val cityListName = city.split(" ")
-                    _resultOfCity =
-                        if (cityListName.size > 1) cityListName[1]
-                        else cityListName[0]
-                    val subLocality = listAddress[0].subLocality
-                    val locality = listAddress[0].locality
-                    val address = "$subLocality, $locality"
-                    binding.tvLocation.text = address
-                    Log.i("AdzanFragment", "City Name: $resultOfCity")
+        adzanViewModel.getDailyAdzanTime().observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    binding.apply {
+                        it.data?.let { adzanDataResult ->
+                            tvLocation.text = adzanDataResult.listLocation[1]
+                            when (val listCity = adzanDataResult.listCity) {
+                                is Resource.Loading -> {}
+                                is Resource.Success -> {
+                                    val idCity = listCity.data?.get(0)?.id
+                                    val cityName = listCity.data?.get(0)?.lokasi
+                                    Toast.makeText(
+                                        context,
+                                        "id city: $idCity. $cityName",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
+                                is Resource.Error -> {
+                                    Toast.makeText(context, listCity.message, Toast.LENGTH_SHORT)
+                                        .show()
+                                    Log.e(
+                                        "AdzanFragment",
+                                        "getCity Id & Location: ${listCity.message}",
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
-            } else {
-                Toast.makeText(context, "Sorry, something wrong.", Toast.LENGTH_SHORT).show()
+
+                is Resource.Error -> {
+                    Toast.makeText(context, "Error Update Your Location:\n" + it.message, Toast.LENGTH_SHORT)
+                        .show()
+                    Log.e(
+                        "AdzanFragment",
+                        "Error when updating your location: ${it.message}",
+                    )
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
-package com.yus.quran.core.data
+package com.yus.quran.core.data.network
 
+import com.yus.quran.core.data.Resource
 import kotlinx.coroutines.flow.*
 
 abstract class NetworkBoundResource<ResultType, RequestType> {

@@ -1,4 +1,4 @@
-package com.yus.quran.core.data
+package com.yus.quran.core.data.network
 
 sealed class NetworkResponse<out T> {
     data class Success<out T>(val data: T) : NetworkResponse<T>()
