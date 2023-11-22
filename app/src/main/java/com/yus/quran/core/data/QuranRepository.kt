@@ -2,6 +2,7 @@ package com.yus.quran.core.data
 
 import com.yus.quran.core.data.network.NetworkBoundResource
 import com.yus.quran.core.data.network.NetworkResponse
+import com.yus.quran.core.data.network.RemoteDataSource
 import com.yus.quran.core.domain.model.QuranEdition
 import com.yus.quran.core.domain.model.Surah
 import com.yus.quran.core.domain.repository.IQuranRepository

@@ -1,7 +1,6 @@
-package com.yus.quran.core.data
+package com.yus.quran.core.data.network
 
 import android.util.Log
-import com.yus.quran.core.data.network.NetworkResponse
 import com.yus.quran.core.data.network.adzan.AdzanApiService
 import com.yus.quran.core.data.network.adzan.CityItem
 import com.yus.quran.core.data.network.adzan.JadwalItem
