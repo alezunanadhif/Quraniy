@@ -1,11 +1,13 @@
 package com.yus.quran.utils
 
 import com.yus.quran.core.data.network.adzan.CityItem
+import com.yus.quran.core.data.network.adzan.JadwalItem
 import com.yus.quran.core.data.network.quran.AyahsItem
 import com.yus.quran.core.data.network.quran.QuranEditionItem
 import com.yus.quran.core.data.network.quran.SurahItem
 import com.yus.quran.core.domain.model.Ayah
 import com.yus.quran.core.domain.model.City
+import com.yus.quran.core.domain.model.DailyAdzan
 import com.yus.quran.core.domain.model.QuranEdition
 import com.yus.quran.core.domain.model.Surah
 import kotlinx.coroutines.flow.Flow
@@ -73,5 +75,22 @@ object DataMapper {
             listCity.add(city)
         }
         return flowOf(listCity)
+    }
+
+    @JvmName("mapDailyResponseToDomain")
+    fun mapResponseToDomain(input: JadwalItem): Flow<DailyAdzan> {
+        val dailyAdzan = DailyAdzan(
+            date = input.date,
+            imsak = input.imsak,
+            isya = input.isya,
+            dzuhur = input.dzuhur,
+            subuh = input.subuh,
+            dhuha = input.dhuha,
+            terbit = input.terbit,
+            tanggal = input.tanggal,
+            ashar = input.ashar,
+            maghrib = input.maghrib
+        )
+        return flowOf(dailyAdzan)
     }
 }
