@@ -2,6 +2,7 @@ package com.yus.quran.presentation.quran
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -12,10 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.yus.quran.R
 import com.yus.quran.adapter.SurahAdapter
 import com.yus.quran.core.data.Resource
-import com.yus.quran.databinding.ActivityDetailSurahBinding
-import com.yus.quran.databinding.CustomViewAlertdialogBinding
 import com.yus.quran.core.domain.model.Ayah
 import com.yus.quran.core.domain.model.Surah
+import com.yus.quran.databinding.ActivityDetailSurahBinding
+import com.yus.quran.databinding.CustomViewAlertdialogBinding
 import com.yus.quran.presentation.ViewModelFactory
 
 class DetailSurahActivity : AppCompatActivity() {
@@ -35,7 +36,10 @@ class DetailSurahActivity : AppCompatActivity() {
         _binding = ActivityDetailSurahBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        _surah = intent.getParcelableExtra(EXTRA_DATA, Surah::class.java)
+        _surah = when {
+            Build.VERSION.SDK_INT >= 33 -> intent.getParcelableExtra(EXTRA_DATA, Surah::class.java)
+            else -> @Suppress("DEPRECATION") intent.getParcelableExtra(EXTRA_DATA)
+        }
 
         initView()
 
