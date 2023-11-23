@@ -28,10 +28,13 @@ class LocationPreferences(val context: Context) {
                 val city = listAddress[0].subAdminArea
                 val cityListName = city.split(" ")
 
-                val resultOfCity = when (Locale.getDefault().language) {
-                    "id" -> getNameOfCity(cityListName, false)
+                val currentLanguage = Locale.getDefault().language
+                Log.i("LocPref", "currentLanguage: $currentLanguage")
+
+                val resultOfCity = when (currentLanguage) {
+                    "in" -> getNameOfCity(cityListName, false)
                     "en" -> getNameOfCity(cityListName, true)
-                    else -> cityListName[0]
+                    else -> "Jakarta"
                 }
                 Log.i("LocPref", "City Name: $resultOfCity")
 
@@ -40,7 +43,9 @@ class LocationPreferences(val context: Context) {
                 val address = "$subLocality, $locality"
                 Log.i("LocPref", "Address: $address")
 
-                lastKnownLocation.postValue(listOf(resultOfCity, address))
+                val listCity = listOf(resultOfCity, address)
+                Log.i("LocPref", "getLastKnownLocation: $listCity")
+                lastKnownLocation.postValue(listCity)
             }
 
             fusedLocationClient.lastLocation.addOnFailureListener { exception ->
