@@ -1,4 +1,4 @@
-package com.yus.quran
+package com.nadhif.quran
 
 import org.junit.Test
 
